@@ -68,6 +68,12 @@ function getPostByCompanyId(id) {
     })
 }
 
+// Update image of post
+function updatePostImage(url) {
+    return new Promise(function(resolve, reject) {
+    })
+}
+
 
 
 module.exports = {

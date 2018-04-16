@@ -33,9 +33,35 @@ module.exports = (function() {
             }).catch(function(err) {
                 return Promise.reject(err);
             })
+        },
+        removeImage: function(fileName) {
+            var aws = require('aws-sdk');
+            aws.config.update({
+                accessKeyId: config.aws.accessKeyId,
+                secretAccessKey: config.aws.secretAccessKey,
+                region: config.aws.region
+            });
+            var s3 = new aws.S3();
+            var params = config.aws.params;
+            params.Key = fileName;
+            Promise.promisifyAll(Object.getPrototypeOf(s3));
+            var key = Object.assign({}, params);
+            delete key.Body;
+            delete key.ACL;
+            return new Promise(function(resolve, reject) {
+                s3.deleteObject(key, function(err, data) {
+                    if (err) {
+                        return reject(err);
+                    }
+                    return resolve({
+                        success: true,
+                        message: 'File Deleted'
+                    })
+                })
+            });
+
         }
     };
-
     // Response builder for all API responses.
 
     var responseBuilder = {

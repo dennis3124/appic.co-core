@@ -1,13 +1,14 @@
 var UtilsModule = "Companies";
 var companyService = require('./company.service');
 var config = require('../../config/config');
+var fs = require('fs');
 var jwt = require('express-jwt');
 var auth = jwt({
     secret: config.jwt.secret,
     userProperty: 'payload'
 });
 
-module.exports = function (router, utils) {
+module.exports = function (router, utils, upload) {
     router.get('/', function(req, res) {
         companyService.getAll().then(function(data) {
             utils.responseBuilder.handleSuccess(UtilsModule, 'Get', res, data);
@@ -60,5 +61,18 @@ module.exports = function (router, utils) {
             utils.responseBuilder.handleError(UtilsModule, 'Get', res, err);
         })
     });
+
+    router.post('/image/remove', function (req, res) {
+        if (!req.body.fileName) {
+            utils.responseBuilder.handleValidationError(UtilsModule, res, 'FileName required');
+        }
+        var filename = 'assets/images/post/' + req.body.fileName;
+        utils.aws.removeImage(filename).then(function(data) {
+            utils.responseBuilder.handleSuccess(UtilsModule, 'post', res, data.message);
+        }).catch(function (err) {
+            utils.responseBuilder.handleError(UtilsModule, 'post', res, err);
+        })
+    });
+
     return router;
 };

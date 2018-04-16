@@ -8,7 +8,6 @@ var postSchema = new Schema({
     },
     images: [{
         type: String
-
     }],
     description: {
         type: String,
@@ -30,6 +29,14 @@ var postSchema = new Schema({
     category: {
         type: String,
         enum: ['Smartwatches', 'Apps', '3D Printing' ]
+    },
+    status: {
+        type: String,
+        enum: ['Creation', 'Development', 'Finished'],
+        default: 'Creation'
+        /* Creation meaning post is still under creation stage,
+        *   Development for when post has finished creation
+        */
     }
 }, {
     collection: 'posts',

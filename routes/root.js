@@ -8,16 +8,25 @@ var storage = multer.diskStorage({ //multers disk storage settings
     filename: function (req, file, cb) {
         var datetimestamp = Date.now();
         cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1]);
-    }
+    },
 });
 
 var upload = multer({ //multer settings
-    storage: storage
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        var type = file.mimetype;
+        var typeArray = type.split("/");
+        if (typeArray[0] === "video" || typeArray[0] === "image") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+        }
+    }
 });
 
-module.exports = function(router, utils) {
+module.exports = function (router, utils) {
     // Return message for root
-    router.route('/').get(function(req, res) {
+    router.route('/').get(function (req, res) {
         res.send('Welcome to api root directory');
     });
 

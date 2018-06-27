@@ -6,9 +6,18 @@ var postSchema = new Schema({
         type: String,
         required: true
     },
+    projectImage: {
+        type: String
+    },
     images: [{
         type: String
     }],
+    video: {
+        type: String
+    },
+    story: {
+        type: String
+    },
     description: {
         type: String,
         required: true
